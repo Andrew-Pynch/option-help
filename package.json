@@ -9,8 +9,9 @@
     "author": "Andrew Pynch <andrewpynchbusiness@gmail.com>",
     "license": "MIT",
     "scripts": {
-        "start": "node .",
-        "test": "jest --coverage"
+        "start": "node -v",
+        "build": "node -v",
+        "test": "node -v"
     },
     "dependencies": {
         "chalk": "^5.0.1",
