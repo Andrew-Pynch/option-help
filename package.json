@@ -8,7 +8,7 @@
     "author": "Andrew Pynch <andrewpynchbusiness@gmail.com>",
     "license": "MIT",
     "scripts": {
-        "start": "ts-node ./src/index.ts",
+        "start": "node .",
         "test": "jest --coverage"
     },
     "dependencies": {

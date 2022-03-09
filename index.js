@@ -27,7 +27,7 @@ const CLI_OPTIONS = {
 
 async function startup() {
     try {
-        const rainbowTitle = chalkAnimation.rainbow('option help \n');
+        const rainbowTitle = chalkAnimation.rainbow('option-help \n');
         await sleep();
         rainbowTitle.stop();
 
@@ -35,7 +35,9 @@ async function startup() {
     ${chalk.bold.cyan('HOW TO USE')}
     Make sure you have created a help.json file in the same directory as your package.json file.
 
-    ${chalk.italic.blue('https://youtube.com')}
+    option-help docs: ${chalk.italic.blue(
+        ' https://github.com/Andrew-Pynch/option-help'
+    )}
           `);
         main();
     } catch (e) {
@@ -49,19 +51,27 @@ function main() {
     executeCommand(command);
 }
 
-function executeCommand(command) {
+async function executeCommand(command) {
     try {
         switch (command) {
             case 'generate-help-file':
-                // generateHelpFromScripts();
                 console.log('generate-help-file');
+                generateHelpFromScripts(getPackageJsonScripts()['scripts']);
                 break;
 
             case 'display-help-options':
                 console.log('display-help-options');
+                displayHelpOptions();
+                break;
 
             case 'display-cli-help':
+                console.log('displaying cli help');
                 displayCliHelp(CLI_OPTIONS);
+                break;
+
+            case 'exit':
+                console.log(chalk.green('exiting option-help \n'));
+                process.exit(1);
 
             default:
                 getOptionSelection(CLI_OPTIONS);
@@ -70,21 +80,30 @@ function executeCommand(command) {
     } catch (e) {}
 }
 
+function displayHelpOptions() {
+    try {
+        const helpOptions = getHelpOptionsFromFile();
+        console.log(helpOptions);
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 function getOptionSelection(cliOptions) {
+    let command = '';
     const cliOptionsKeys = Object.keys(cliOptions);
-    console.log(cliOptionsKeys);
+
     inquirer
         .prompt([
             {
                 type: 'list',
                 name: 'command',
                 message: 'What command would you like to run',
-                choices: cliOptionsKeys,
+                choices: [...cliOptionsKeys, 'exit'],
             },
         ])
         .then((answers) => {
-            console.info('Answer:', answers.command);
-            return answers.command;
+            executeCommand(answers.command);
         });
 }
 
@@ -146,6 +165,7 @@ function parseCliArgs(cliArg, cliOptions) {
 }
 
 function generateHelpFromScripts(scripts) {
+    console.log('scripts', scripts);
     const helpOptions = {};
     Object.keys(scripts).forEach((key) => {
         console.log(key, scripts[key]);
@@ -164,6 +184,8 @@ function writeHelpOptionsToFile(helpOptions) {
     try {
         const data = JSON.stringify(helpOptions);
         fs.writeFileSync('help.json', data);
+        console.log(chalk.green('Wrote help.json file in current directory.'));
+        main();
     } catch (err) {
         console.error(chalk.bold.red(err));
     }
@@ -173,20 +195,31 @@ function getPackageJsonScripts() {
     try {
         const data = fs.readFileSync('package.json', 'utf8');
         const packageJson = JSON.parse(data);
-        const options = packageJson.scripts;
-        return options;
+        return packageJson;
     } catch (e) {
         console.error(e);
     }
 }
 
-function getOptionsFromFile() {
+function getHelpOptionsFromFile() {
     try {
         const data = fs.readFileSync('help.json', 'utf8');
         const helpOptions = JSON.parse(data);
         return helpOptions;
-    } catch (err) {
-        console.error(chalk.bold.red(err));
+    } catch (e) {
+        if (
+            e.toString().includes("no such file or directory, open 'help.json'")
+        ) {
+            console.log(`
+    ${chalk.bold.red('No help.json file found in current directory.')}
+    ${chalk.yellow(`
+    You can generate one by running npx option-help --ghf or selecting
+    generate-help-file after running npx option-help with no cli flags.
+    `)}
+    `);
+        }
+
+        main();
     }
 }
 
