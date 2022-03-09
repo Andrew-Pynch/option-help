@@ -1,8 +1,9 @@
 {
-    "name": "option-help",
+    "name": "package-scripts-help",
     "version": "0.0.1",
     "description": "generate help menus for your custom package.json scripts",
     "main": "index.js",
+    "bin": "./index.js",
     "type": "module",
     "repository": "https://github.com/andrew-pynch/option-help",
     "author": "Andrew Pynch <andrewpynchbusiness@gmail.com>",
