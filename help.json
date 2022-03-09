@@ -1,1 +1,0 @@
-{"start":{"command":"node .","description":"","supportingDocumentationLink":""},"test":{"command":"jest --coverage","description":"","supportingDocumentationLink":""}}

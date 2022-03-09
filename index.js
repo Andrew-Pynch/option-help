@@ -7,7 +7,7 @@ import inquirer from 'inquirer';
 
 const PROGRAM_EXECUTING = true;
 
-const sleep = (ms = 200) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms = 500) => new Promise((r) => setTimeout(r, ms));
 
 const CLI_OPTIONS = {
     'generate-help-file': [
