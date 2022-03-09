@@ -94,7 +94,7 @@ function displayHelpOptions() {
         const helpOptions = getHelpOptionsFromFile();
         for (const [command, details] of Object.entries(helpOptions)) {
             console.log(`
-    ${chalk.italic.green(`EX: yarn `)} ${command}
+    ${chalk.italic.green(`EX: `)} yarn ${command}
     ${chalk.bold.cyan(`command name: `)} ${command}
     ${chalk.italic.yellow(`description: `)} ${details.description}
     ${chalk.italic.cyan(`supporting documentation link: `)} ${

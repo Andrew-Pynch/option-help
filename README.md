@@ -17,7 +17,7 @@ Visual Mode
 
 ```bash
 cd /path/to/package.json
-npx package-scripts-help
+npx package-scripts-help@latest
 # use your arrow keys and press enter to select the option you want
 ```
 
@@ -25,7 +25,7 @@ With Command Line Args
 
 ```bash
 cd /path/to/package.json
-npx package-scripts-help --{flag}
+npx package-scripts-help@latest --{flag}
 ```
 
 ## Valid Command Line Flags
