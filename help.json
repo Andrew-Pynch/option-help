@@ -1,0 +1,1 @@
+{"start":{"command":"ts-node ./src/index.ts","description":"","supportingDocumentationLink":""},"test":{"command":"jest --coverage","description":"","supportingDocumentationLink":""}}
