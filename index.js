@@ -45,8 +45,13 @@ async function startup() {
     }
 }
 
-function main() {
-    const cliArg = getCliArg();
+function main(firstAttempt = true) {
+    let cliArg = '';
+    if (firstAttempt !== false) {
+        cliArg = getCliArg();
+    } else {
+        cliArg = 'no-command';
+    }
     const command = parseCliArgs(cliArg, CLI_OPTIONS);
     executeCommand(command);
 }
@@ -69,6 +74,10 @@ async function executeCommand(command) {
                 displayCliHelp(CLI_OPTIONS);
                 break;
 
+            case 'no-command':
+                getOptionSelection(CLI_OPTIONS);
+                break;
+
             case 'exit':
                 console.log(chalk.green('exiting option-help \n'));
                 process.exit(1);
@@ -83,9 +92,19 @@ async function executeCommand(command) {
 function displayHelpOptions() {
     try {
         const helpOptions = getHelpOptionsFromFile();
-        console.log(helpOptions);
+        for (const [command, details] of Object.entries(helpOptions)) {
+            console.log(`
+    ${chalk.italic.green(`EX: yarn `)} ${command}
+    ${chalk.bold.cyan(`command name: `)} ${command}
+    ${chalk.italic.yellow(`description: `)} ${details.description}
+    ${chalk.italic.cyan(`supporting documentation link: `)} ${
+                details.supportingDocumentationLink
+            }
+            `);
+        }
     } catch (e) {
-        console.error(e);
+        // console.log('ERROR IS HAPPENING HERE');
+        // console.error(e);
     }
 }
 
@@ -165,7 +184,6 @@ function parseCliArgs(cliArg, cliOptions) {
 }
 
 function generateHelpFromScripts(scripts) {
-    console.log('scripts', scripts);
     const helpOptions = {};
     Object.keys(scripts).forEach((key) => {
         console.log(key, scripts[key]);
@@ -185,7 +203,7 @@ function writeHelpOptionsToFile(helpOptions) {
         const data = JSON.stringify(helpOptions);
         fs.writeFileSync('help.json', data);
         console.log(chalk.green('Wrote help.json file in current directory.'));
-        main();
+        main(false);
     } catch (err) {
         console.error(chalk.bold.red(err));
     }
@@ -205,10 +223,16 @@ function getHelpOptionsFromFile() {
     try {
         const data = fs.readFileSync('help.json', 'utf8');
         const helpOptions = JSON.parse(data);
+        if (helpOptions.length > 0) {
+            throw new Error("couldn't find file");
+        }
         return helpOptions;
     } catch (e) {
         if (
-            e.toString().includes("no such file or directory, open 'help.json'")
+            e
+                .toString()
+                .includes("no such file or directory, open 'help.json'") ||
+            e.toString().includes("couldn't find file")
         ) {
             console.log(`
     ${chalk.bold.red('No help.json file found in current directory.')}
@@ -219,7 +243,7 @@ function getHelpOptionsFromFile() {
     `);
         }
 
-        main();
+        main(false);
     }
 }
 
