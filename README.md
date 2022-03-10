@@ -1,4 +1,7 @@
-# package-help
+# package-scripts-help
+
+[![npm version](https://badge.fury.io/js/package-scripts-help.svg)](https://badge.fury.io/js/package-scripts-help)
+[![Publish](https://github.com/Andrew-Pynch/option-help/actions/workflows/publish.yml/badge.svg)](https://github.com/Andrew-Pynch/option-help/actions/workflows/publish.yml)
 
 ## The problem
 
